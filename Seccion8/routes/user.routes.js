@@ -8,7 +8,7 @@ const {
 } = require('../controllers/usuarios');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
-
+const { esRoleValido } = require('../helpers/db-validators');
 const router = Router();
 
 router.get('/', usuariosGet);
@@ -21,7 +21,9 @@ router.post(
 			min: 6,
 		}),
 		check('correo', 'El correo no es valido').isEmail(),
-		check('rol', 'El rol no esta permitido').isIn(['ADMIN_ROLE', 'USER_ROL']),
+		// en  custom se le pasa como argumento una funcion (role)=>{} pero como es roleValido recibe role como parametro solo se le pasa la referencia de esRoleValido
+		// de esta forma es como si estuvieramos haciendo (role)=>esRoleValido(role)
+		check('rol').custom(esRoleValido),
 		validarCampos,
 	],
 	usuariosPost
