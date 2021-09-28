@@ -7,6 +7,16 @@ const esRoleValido = async (rol = '') => {
 	}
 };
 
+
+const existeMail = async (correo = '') => {
+	const existeEmail = await UsuarioModel.findOne({ correo });
+		if (existeEmail) {
+			throw new Error(`El correo ${correo} ya existe en la BD`);
+
+		}
+};
+
 module.exports = {
 	esRoleValido,
+	existeMail
 };
